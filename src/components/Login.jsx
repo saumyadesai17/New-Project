@@ -35,7 +35,7 @@ const Login = () => {
         const data = await response.json();
         localStorage.setItem('token', data.data.access);
         localStorage.setItem('username', data.data.username);
-        navigate('/signup'); // Redirect after successful login
+        navigate('/chatbot'); // Redirect after successful login
       } else {
         const data = await response.json();
         setError(data.message || 'Something went wrong. Please try again.');
@@ -45,11 +45,28 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLoginSuccess = (response) => {
-    console.log('Google login successful:', response);
-    navigate('/chatbot'); // Redirect after successful login
-    // You can send the response to your backend for further processing
+
+  const handleGoogleLoginSuccess = () => {
+    const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+  
+    const scope = [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile'
+    ].join(' ');
+  
+    const params = {
+      response_type: 'code',
+      client_id: '947102050275-qg1hr23jg9ada00jj22gce3e05o5stmk.apps.googleusercontent.com',
+      redirect_uri: 'http://127.0.0.1:8000/account/login/google/',
+      prompt: 'select_account',
+      access_type: 'offline',
+      scope
+    };
+  
+    const urlParams = new URLSearchParams(params).toString();
+    window.location = `${GOOGLE_AUTH_URL}?${urlParams}`;
   };
+  
 
   const handleGoogleLoginFailure = (error) => {
     console.error('Google login failed:', error);

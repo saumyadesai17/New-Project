@@ -46,13 +46,14 @@ const Signup = () => {
       setError('Network error occurred. Please try again.');
     }
   };
-
   const handleGoogleLoginSuccess = (response) => {
     console.log('Google login successful:', response);
     navigate('/login')
     // You can send the response to your backend for further processing
     // navigate('/some-route'); // Redirect after successful login
-  };
+  }
+  
+  
 
   const handleGoogleLoginFailure = (error) => {
     console.error('Google login failed:', error);
