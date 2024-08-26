@@ -37,21 +37,24 @@ const ChatBot = () => {
                 window.location.href = '/login'; // Example redirect, adjust the path as needed
                 return;
             }
+            console.log(transcript);
     
             const response = await axios.post(
                 'http://127.0.0.1:8000/user_chats/chat/',
                 { transcript },
                 {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
                     }
                 }
             );
-            
             if (response.data.image_path) {
-                const imageURL = `http://127.0.0.1:8000/media/${response.data.image_path}`;
-                setImagePath(imageURL);
-            }
+                // Construct the full URL here
+                const fullImageUrl = `http://127.0.0.1:8000${response.data.image_path}`;
+                setImagePath(fullImageUrl);
+              }
+            
         } catch (error) {
             console.error("Error generating image:", error);
             if (error.response && error.response.status === 401) {

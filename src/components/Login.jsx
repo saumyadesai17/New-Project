@@ -21,29 +21,34 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-  
+
     try {
-      const response = await fetch('http://127.0.0.1:8000/account/login/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.data.access);
-        localStorage.setItem('username', data.data.username);
-        navigate('/chatbot'); // Redirect after successful login
-      } else {
-        const data = await response.json();
-        setError(data.message || 'Something went wrong. Please try again.');
-      }
+        const response = await fetch('http://127.0.0.1:8000/account/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: formData.username.trim(),
+                password: formData.password,
+            }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('token', data.data.access);
+            localStorage.setItem('username', data.data.username);
+            navigate('/chatbot'); // Redirect after successful login
+        } else {
+            const data = await response.json();
+            console.log(data); // Log the error response for debugging
+            setError(data.message || 'Something went wrong. Please try again.');
+        }
     } catch (error) {
-      setError('Failed to connect to the server. Please try again later.');
+        setError('Failed to connect to the server. Please try again later.');
     }
-  };
+};
+
 
 
   const handleGoogleLoginSuccess = () => {
